@@ -8,15 +8,19 @@ typedef enum {
 	LW_DOUBLE = 1,
 } E_PCL_LINE_WEIGHT;
 
-
 typedef struct {
 	unsigned int width;
 	unsigned int heigh;
+	unsigned char *data;
 } S_PCL_FRAME;
 
-extern S_PCL_FRAME pcl_init();
+typedef struct {
+	unsigned int x;
+	unsigned int y;
+} S_PCL_POINT;
 
-
-//extern void pcl_line(E_LINE_WEIGHT lt);
+extern S_PCL_FRAME *pcl_init();
+extern S_PCL_POINT *pcl_point(unsigned int x, unsigned int y);
+extern void pcl_line(S_PCL_FRAME *frame, const S_PCL_POINT *x, const S_PCL_POINT *y, const E_PCL_LINE_WEIGHT *lt);
 
 #endif
