@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-c -g
 LDFLAGS=-g
-SOURCES=main.c picaline.c
+SOURCES=$(wildcard src/*.c)
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=picaline
 
