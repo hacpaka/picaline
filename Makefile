@@ -1,17 +1,15 @@
-CC=gcc
-CFLAGS=-c -g
-LDFLAGS=-g
+.PHONY: all clean
+
+CC = gcc
+CFLAGS = -g
+CFLAGS += -Wall
+EXECUTABLE = picaline
+
 SOURCES=$(wildcard src/*.c)
-OBJECTS=$(SOURCES:.c=.o)
-EXECUTABLE=picaline
 
-all: $(SOURCES) $(EXECUTABLE)
-	
-$(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
-
-.c.o:
-	$(CC) $(CFLAGS) $< -o $@
+all: $(SOURCES)
+	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(SOURCES)
 
 clean:
 	rm -rf *.o picaline
+

@@ -1,3 +1,5 @@
 *.o
 .idea
 CMakeLists.txt
+./picaline
+
