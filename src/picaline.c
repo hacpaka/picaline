@@ -53,9 +53,11 @@ void pcl_line(S_PCL_FRAME *frame, const S_PCL_POINT *fp, const S_PCL_POINT *sp, 
 		sy = fp->y;
 	}
 
-	for (int y = fy; y <= sy; y++){
-		for (int x = fx; x <= sx; x++) {
-			pcl_point(frame, pcl_mkpoint(x, y), lt);
+//	for (int y = fy; y <= sy; y++){
+//		for (int x = fx; x <= sx; x++) {
+	while(fx <= sx){
+		while(fy <= sy){
+			pcl_point(frame, pcl_mkpoint(fx++, fy++), lt);
 		}
 	}
 
