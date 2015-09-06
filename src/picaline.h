@@ -19,9 +19,11 @@ typedef struct {
 	unsigned int y;
 } S_PCL_POINT;
 
-extern S_PCL_FRAME *pcl_init();
-extern S_PCL_POINT *pcl_point(unsigned int x, unsigned int y);
+extern S_PCL_FRAME *pcl_mkframe();
+extern S_PCL_POINT *pcl_mkpoint(unsigned int x, unsigned int y);
+
 extern void pcl_draw(S_PCL_FRAME *frame);
-extern void pcl_line(S_PCL_FRAME *frame, const S_PCL_POINT *x, const S_PCL_POINT *y, const E_PCL_LINE_WEIGHT *lt);
+extern void pcl_point(S_PCL_FRAME *frame, S_PCL_POINT *pnt, E_PCL_LINE_WEIGHT lt);
+extern void pcl_line(S_PCL_FRAME *frame, const S_PCL_POINT *fp, const S_PCL_POINT *sp, const E_PCL_LINE_WEIGHT lt);
 
 #endif
