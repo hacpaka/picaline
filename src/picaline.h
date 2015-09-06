@@ -21,6 +21,7 @@ typedef struct {
 
 extern S_PCL_FRAME *pcl_init();
 extern S_PCL_POINT *pcl_point(unsigned int x, unsigned int y);
+extern void pcl_draw(S_PCL_FRAME *frame);
 extern void pcl_line(S_PCL_FRAME *frame, const S_PCL_POINT *x, const S_PCL_POINT *y, const E_PCL_LINE_WEIGHT *lt);
 
 #endif

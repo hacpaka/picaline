@@ -3,6 +3,14 @@
 #include <sys/ioctl.h>
 //#include <stdio.h>
 
+
+S_PCL_POINT *pcl_point(unsigned int x, unsigned int y){
+	S_PCL_POINT *point = malloc(sizeof(S_PCL_POINT));
+	point->x = x;
+	point->y = y;
+	return point;
+}
+
 S_PCL_FRAME *pcl_init(){
 	struct winsize win;
 	S_PCL_FRAME *frame = malloc(sizeof(S_PCL_FRAME));
@@ -21,15 +29,14 @@ S_PCL_FRAME *pcl_init(){
 	return frame;
 }
 
-S_PCL_POINT *pcl_point(unsigned int x, unsigned int y){
-	S_PCL_POINT *point = malloc(sizeof(S_PCL_POINT));
-	point->x = x;
-	point->y = y;
-	return point;
+void pcl_draw(S_PCL_FRAME *frame){
+	for (int i = 0; i < frame->heigh; i++){
+		for(int j = 0; j < frame->width; j++) {
+			printf("%c", *(frame->data + i*frame->width+j));
+		}
+	}
 }
 
 void pcl_line(S_PCL_FRAME *frame, const S_PCL_POINT *x, const S_PCL_POINT *y, const E_PCL_LINE_WEIGHT *lt){
-
-	
 
 }
