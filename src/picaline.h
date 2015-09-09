@@ -4,8 +4,9 @@
 #include <unistd.h>
 
 typedef enum {
-	LW_SINGLE = 0,
-	LW_DOUBLE = 1,
+	LW_EMPTY = 0,
+	LW_SINGLE = 1,
+	LW_DOUBLE = 2,
 } E_PCL_LINE_WEIGHT;
 
 typedef struct {
@@ -22,8 +23,9 @@ typedef struct {
 extern S_PCL_FRAME *pcl_mkframe();
 extern S_PCL_POINT *pcl_mkpoint(unsigned int x, unsigned int y);
 
-extern void pcl_draw(S_PCL_FRAME *frame);
 extern void pcl_point(S_PCL_FRAME *frame, S_PCL_POINT *pnt, E_PCL_LINE_WEIGHT lt);
 extern void pcl_line(S_PCL_FRAME *frame, const S_PCL_POINT *fp, const S_PCL_POINT *sp, const E_PCL_LINE_WEIGHT lt);
+
+extern void pcl_draw(S_PCL_FRAME *frame);
 
 #endif

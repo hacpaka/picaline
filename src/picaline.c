@@ -1,6 +1,7 @@
 #include "picaline.h"
 #include <malloc.h>
 #include <sys/ioctl.h>
+#include "symbols.h"
 //#include <stdio.h>
 
 
@@ -22,19 +23,11 @@ S_PCL_FRAME *pcl_mkframe(){
 
 	for (int i = 0; i < frame->heigh; i++){
 		for(int j = 0; j < frame->width; j++) {
-			*(frame->data + i*frame->width+j) = '.';
+			*(frame->data + i*frame->width+j) = LW_EMPTY;
 		}
 	}
 
 	return frame;
-}
-
-void pcl_draw(S_PCL_FRAME *frame){
-	for (int i = 0; i < frame->heigh; i++){
-		for(int j = 0; j < frame->width; j++) {
-			printf("%c", *(frame->data + i*frame->width+j));
-		}
-	}
 }
 
 void pcl_line(S_PCL_FRAME *frame, const S_PCL_POINT *fp, const S_PCL_POINT *sp, const E_PCL_LINE_WEIGHT lt){
@@ -53,18 +46,40 @@ void pcl_line(S_PCL_FRAME *frame, const S_PCL_POINT *fp, const S_PCL_POINT *sp, 
 		sy = fp->y;
 	}
 
-//	for (int y = fy; y <= sy; y++){
-//		for (int x = fx; x <= sx; x++) {
-	while(fx <= sx){
-		while(fy <= sy){
-			pcl_point(frame, pcl_mkpoint(fx++, fy++), lt);
+	while(fx < sx || fy < sy){
+		pcl_point(frame, pcl_mkpoint(fx, fy), lt);
+		if (fx < sx) {
+			fx++;
+		}
+		if (fy < sy) {
+			fy++;
 		}
 	}
+	pcl_point(frame, pcl_mkpoint(fx, fy), lt);
 
 }
 
 void pcl_point(S_PCL_FRAME *frame, S_PCL_POINT *pnt, E_PCL_LINE_WEIGHT lt){
-	if (pnt->x <= frame->width && pnt->y <= frame->heigh){
-		*(frame->data + pnt->y * frame->width + pnt->x) = 'O';
+	if (pnt->x < frame->width && pnt->y < frame->heigh){
+		*(frame->data + pnt->y * frame->width + pnt->x) = lt;
+	}
+}
+
+void pcl_draw(S_PCL_FRAME *frame){
+	E_PCL_LINE_WEIGHT lw;
+	for (int i = 0; i < frame->heigh; i++){
+		for(int j = 0; j < frame->width; j++) {
+			lw = *(frame->data + i*frame->width+j);
+
+			if (lw == LW_EMPTY){
+				printf("%c", '.');
+				continue;
+			}
+
+			if (lw == LW_SINGLE){
+				printf("%c", '|');
+				continue;
+			}
+		}
 	}
 }
