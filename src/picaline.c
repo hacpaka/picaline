@@ -1,16 +1,9 @@
 #include "picaline.h"
 #include <malloc.h>
 #include <sys/ioctl.h>
+#include <string.h>
+#include <stdio.h>
 #include "symbols.h"
-//#include <stdio.h>
-
-
-S_PCL_POINT *pcl_mkpoint(unsigned int x, unsigned int y){
-	S_PCL_POINT *point = malloc(sizeof(S_PCL_POINT));
-	point->x = x;
-	point->y = y;
-	return point;
-}
 
 S_PCL_FRAME *pcl_mkframe(){
 	struct winsize win;
@@ -30,39 +23,50 @@ S_PCL_FRAME *pcl_mkframe(){
 	return frame;
 }
 
-void pcl_line(S_PCL_FRAME *frame, const S_PCL_POINT *fp, const S_PCL_POINT *sp, const E_PCL_LINE_WEIGHT lt){
+void pcl_line(S_PCL_FRAME *frame, usi x, usi y, usi length, E_PCL_LINE_COURCE cource, E_PCL_LINE_WEIGHT lt){
 
-	unsigned int fx = fp->x;
-	unsigned int sx = sp->x;
-	if (fp->x > sp->x){
-		fx = sp->x;
-		sx = fp->x;
+	usi fx = x;
+	usi fy = y;
+
+	if (cource == LC_UP){
+		y = length <= y ? y - length : 0;
+	}
+	if (cource == LC_DOWN){
+		fy = y + length < frame->heigh ? y + length : frame->heigh - 1;
 	}
 
-	unsigned int fy = fp->y;
-	unsigned int sy = sp->y;
-	if (fp->y > sp->y){
-		fy = sp->y;
-		sy = fp->y;
+	if (cource == LC_LEFT){
+		x = length <= x ? x - length : 0;
 	}
 
-	while(fx < sx || fy < sy){
-		pcl_point(frame, pcl_mkpoint(fx, fy), lt);
-		if (fx < sx) {
-			fx++;
-		}
-		if (fy < sy) {
-			fy++;
-		}
+	if (cource == LC_RIGHT){
+		fx = x + length < frame->width ? x + length : frame->width - 1;
 	}
-	pcl_point(frame, pcl_mkpoint(fx, fy), lt);
+
+	printf("%d:%d,%d:%d\n", x, fx, y, fy);
+
+	for(usi i = x; i <= fx; i++){
+		pcl_point(frame, i, y, lt);
+	}
+
+	for(usi i = y; i <= fy; i++){
+		pcl_point(frame, x, i, lt);
+	}
 
 }
 
-void pcl_point(S_PCL_FRAME *frame, S_PCL_POINT *pnt, E_PCL_LINE_WEIGHT lt){
-	if (pnt->x < frame->width && pnt->y < frame->heigh){
-		*(frame->data + pnt->y * frame->width + pnt->x) = lt;
+void pcl_point(S_PCL_FRAME *frame, usi x, usi y, E_PCL_LINE_WEIGHT lt){
+	if (x < frame->width && y < frame->heigh){
+		*(frame->data + y * frame->width + x) = lt;
 	}
+}
+
+E_PCL_LINE_WEIGHT pcl_pntinf(S_PCL_FRAME *frame, usi x, usi y){
+	if (x < 0 || x >= frame->width || y < 0 || y >= frame->heigh){
+		return LW_EMPTY;
+	}
+
+	return *(frame->data + y * frame->width + x);
 }
 
 void pcl_draw(S_PCL_FRAME *frame){
@@ -77,9 +81,28 @@ void pcl_draw(S_PCL_FRAME *frame){
 			}
 
 			if (lw == LW_SINGLE){
-				printf("%c", '|');
+
+				char ch[4];
+
+				for (int i = 0; i < 4; i++){
+					ch[i] = '\0';
+				}
+
+				strcpy(ch, "*");
+
+				if (pcl_pntinf(frame, j, i - 1) == LW_SINGLE || pcl_pntinf(frame, j, i + 1) == LW_SINGLE){
+					strcpy(ch, S_SGL_VER);
+				}
+
+				if (pcl_pntinf(frame, j - 1, i) == LW_SINGLE || pcl_pntinf(frame, j + 1, i) == LW_SINGLE){
+					strcpy(ch, S_SGL_HOR);
+				}
+
+				printf("%s", ch);
 				continue;
+
 			}
+
 		}
 	}
 }
